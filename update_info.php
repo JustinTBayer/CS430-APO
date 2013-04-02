@@ -1,4 +1,6 @@
 <?php
+function print_form()
+{
 echo<<<END
 <h1>Update Information</h1>
 
@@ -7,17 +9,17 @@ echo<<<END
 <form method="POST">
 <p>
 <b>Personal</b><br/>
-<label for="first_name">First Name</label> 
-<input type="text" name="first_name" value="$row[firstname]"/>
+<label for="firstname">First Name</label> 
+<input type="text" name="firstname" value =""/>
 <br/>
 
-<label for="last_name">Last Name</label> 
-<input type="text" name="last_name" value="$row[lastname]"/>
+<label for="lastname">Last Name</label> 
+<input type="text" name="lastname" value = ""/>
 <br/>
 
 <label for="birthday">Birthday</label>
 <select name="bmonth" id="bmonth"> 
-	<option value="$row[bmonth]">$month</option> 
+	<option value="$row[bmonth]">$bmonth</option> 
 	<option value="01">January</option> 
 	<option value="02">February</option> 
 	<option value="03">March</option> 
@@ -75,13 +77,15 @@ echo<<<END
 	<option value="Fall">Fall</option> 
 	<option value="Spring">Spring</option> 
 </select>
-<select name="pledge_year">
-	<option value="2013">2013</option> 		
-	<option value="2012">2012</option>
-	<option value="2011">2011</option>
-	<option value="2010">2010</option>	
-	<option value="2009">2009</option>	
-	<option value="2008">2008</option>	
+END;
+echo '<select name="pledge_year">';
+$date = date('m-d-y');
+$year = date('Y', $date);
+for(int $i = 1900; $i<$year; $i++)
+{	
+	echo '<option value="$i">$i</option>'; 		
+}
+echo<<<END
 </select>
 <br/>
 
@@ -135,14 +139,13 @@ echo<<<END
 	<option value="August">August</option> 
 	<option value="December">December</option> 
 </select>
-<select name="grad_year"> 
-	<option>$row[gradyear]</option> 
-	<option value="2012">2012</option>
-	<option value="2013">2013</option> 
-	<option value="2014">2014</option>
-	<option value="2015">2015</option> 
-	<option value="2016">2016</option> 
-	<option value="2017">2017</option> 
+<select name="grad_year">
+END;
+for(int $i=0; $i<$year+4; $i++)
+{
+	echo '<option value="2012">2012</option>';
+}
+echo<<<END
 </select>
 <br/>
 
@@ -190,4 +193,14 @@ No<input type="radio" name="hide_info" value="F" $selectedF/>
 </p>
 </form>
 END;
+}
+function process_form()
+{
+	$stmt = $dbh->prepare("UPDATE 'Member' SET (firstname, lastname, email, phone, schoolyear, gradsem, gradyear,
+	pledgesem, pledgeyear, flowerid, bigbro, littlebro, statusid, position, birthday, activesem, riskmanagement,
+	hideinfo) VALUES (:name, :value)");
+);
+}
+
+
 ?>
